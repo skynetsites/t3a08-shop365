@@ -28,3 +28,14 @@
     background: var(--primary-orange);
      color: white;
 }
+
+.empty { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    width: 100%;
+    background: var(--bg-light);
+    border-radius: 10px;
+    color: var(--text-primary);
+}

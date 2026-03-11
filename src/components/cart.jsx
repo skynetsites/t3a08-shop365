@@ -19,7 +19,13 @@ export function Cart({ items = [] }) {
               <h4>{item.title}</h4>
               <p>{item.category}</p>
             </div>
-            <span className="item-price">{currencyFormat(item.price)}</span>
+            <span className="item-price">
+              {" "}
+              <span style={{ fontSize: 10, color: "#686868" }}>
+                {item.quantity}x
+              </span>{" "}
+              {currencyFormat(item.price)}
+            </span>
           </div>
         ))}
 
