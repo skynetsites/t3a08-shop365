@@ -1,0 +1,30 @@
+:root {
+    /* Design System - Colors (Extracted from Figma variables & Visuals) */
+    --primary-orange: #FF4500;
+    --text-primary: #212B36; /* Gray/800 from Figma */
+    --text-secondary: #637381; /* Gray/600 from Figma */
+    --bg-light: #F9F9F9;
+    --card-bg: #EAEAEA;
+    --white: #FFFFFF;
+    --divider-color: #E0E0E0;
+
+    /* Design System - Typography Scale */
+    --font-family: 'Poppins', sans-serif;
+    
+    --text-xs: 0.75rem;   /* 12px */
+    --text-sm: 0.875rem;  /* 14px (Base) */
+    --text-base: 1rem;    /* 16px */
+    --text-lg: 1.125rem;  /* 18px */
+    --text-xl: 1.25rem;   /* 20px */
+    --text-2xl: 1.5rem;   /* 24px */
+    --text-3xl: 2rem;     /* 32px */
+    --text-4xl: 2.5rem;   /* 40px */
+
+    /* Font Weights */
+    --font-regular: 400;
+    --font-semibold: 600;
+    --font-bold: 700;
+
+    /* Largura fixa da barra do carrinho */
+    --cart-width: 600px;
+}
