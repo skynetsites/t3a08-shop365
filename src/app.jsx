@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Cart } from "./components/cart";
 import { Header } from "./components/header";
 import { ProductItem } from "./components/product-item";
-import { products } from "./data";
+// import { products } from "./data";
 
 import "./styles/app.css";
 
+const CART_KEY = "shop365:cart";
+
 export function App() {
+  const [products, setProducts] = useState([]);
   const [filterSelected, setFilterSelected] = useState("all");
   const [cart, setCart] = useState([]);
+  const [error, setError] = useState(false);
 
   const productsFilters =
     filterSelected === "all"
@@ -26,10 +30,75 @@ export function App() {
     );
 
     if (productSelected) {
-      setCart([...cart, productSelected]);
+      const itemExists = cart.find((item) => item.id === idProduct);
+      let newCart = [];
+
+      if (itemExists) {
+        newCart = cart.map((item) => {
+          if (item.id === idProduct) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+            };
+          }
+          return item;
+        });
+      } else {
+        const cartItem = {
+          ...productSelected,
+          quantity: 1,
+        };
+
+        newCart = [...cart, cartItem];
+      }
+
+      setCart(newCart);
+      localStorage.setItem(CART_KEY, JSON.stringify(newCart));
     }
-    // console.log("id do produto", idProduct);
   }
+
+  /** Recuperando dados do localStorage */
+  useEffect(() => {
+    const cartStorage = localStorage.getItem(CART_KEY);
+
+    if (cartStorage) {
+      const cartList = JSON.parse(cartStorage);
+
+      setCart(cartList);
+    }
+  }, []);
+
+  /** Recuperar produtos da api */
+  useEffect(() => {
+    // fetch("https://dummyjson.com/products", {
+    //   method: "post",
+    //   body: JSON.stringify({
+    //     title: "teste",
+    //     price: 250
+    //   })
+    // })
+    fetch("https://dummyjson.com/products")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.products && data.products.length > 0) {
+          const productsFormated = data.products.map((product) => {
+            return {
+              id: product.id,
+              title: product.title,
+              price: product.price,
+              category: product.category,
+              thumbnail: product.thumbnail,
+            };
+          });
+
+          setProducts(productsFormated);
+        }
+      })
+      .catch(() => {
+        setError(true);
+        // console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -98,6 +167,15 @@ export function App() {
               />
             ))}
           </div>
+
+          {error && (
+            <div className="empty">
+              <span>
+                Houve um error! Nenhum produto encontrado no momento, tente mais
+                tarde!
+              </span>
+            </div>
+          )}
         </main>
       </div>
 
