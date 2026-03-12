@@ -15,6 +15,9 @@ export function Cart({ items = [] }) {
       <div className="cart-items" id="cart-items">
         {items.map((item) => (
           <div className="cart-item" key={item.id}>
+            <div className="product-image" style={{ width: "5rem", height: "5rem", padding: "1rem" }}>
+              <img src={item.thumbnail} alt={item.title} />
+            </div>
             <div className="item-details">
               <h4>{item.title}</h4>
               <p>{item.category}</p>
