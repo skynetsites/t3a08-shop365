@@ -186,7 +186,7 @@ export function App() {
 
       <Cart 
         items={cart} 
-        onCartQuant={handleAddCart}
+        onCartQuant={handleAddCart} // Passando o carrinho e a função handleAddCart para o componente Cart "onCartQuant" permite que o Cart aumente ou diminua a quantidade de itens
       />
     </>
   );
