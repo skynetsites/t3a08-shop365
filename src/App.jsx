@@ -24,38 +24,42 @@ export function App() {
     // console.log(event.target.value);
   }
 
-  function handleAddCart(idProduct) {
-    const productSelected = products.find(
-      (product) => product.id === idProduct,
-    );
+  function handleAddCart(idProduct, amount = 1) { // adicionado parâmetro "amount" (antes não existia) com valor padrão 1
 
-    if (productSelected) {
-      const itemExists = cart.find((item) => item.id === idProduct);
-      let newCart = [];
+  const productSelected = products.find(
+    (product) => product.id === idProduct
+  );
 
-      if (itemExists) {
-        newCart = cart.map((item) => {
-          if (item.id === idProduct) {
-            return {
-              ...item,
-              quantity: item.quantity + 1,
-            };
-          }
-          return item;
-        });
-      } else {
-        const cartItem = {
-          ...productSelected,
-          quantity: 1,
-        };
+  if (!productSelected) return; // early return se o produto não for encontrado
 
-        newCart = [...cart, cartItem];
-      }
+  const itemExists = cart.find((item) => item.id === idProduct);
+  let newCart = [];
 
-      setCart(newCart);
-      localStorage.setItem(CART_KEY, JSON.stringify(newCart));
-    }
+  if (itemExists) {
+    newCart = cart
+      .map((item) => {
+        if (item.id === idProduct) {
+          return {
+            ...item,
+            quantity: item.quantity + amount, // antes era item.quantity + 1
+          };
+        }
+        return item;
+      })
+      .filter((item) => item.quantity > 0); // remove do carrinho itens cuja quantidade ficou 0 ou negativa
+  } else if (amount > 0) { // impede adicionar item com quantidade 0 ou negativa
+
+    const cartItem = {
+      ...productSelected,
+      quantity: amount, // antes iniciava com 1, agora usa o valor de "amount"
+    };
+
+    newCart = [...cart, cartItem];
   }
+
+  setCart(newCart);
+  localStorage.setItem(CART_KEY, JSON.stringify(newCart));
+}
 
   /** Recuperando dados do localStorage */
   useEffect(() => {
@@ -146,7 +150,8 @@ export function App() {
                 Groceries
               </button>
             </div>
-            <select value={filterSelected} onChange={handleOnChange}>
+            {/* select ocultado com hidden pois os filtros já são controlados pelos botões acima */}
+            <select value={filterSelected} onChange={handleOnChange} hidden>
               <option value="all">All</option>
               <option value="beauty">Beauty</option>
               <option value="fragrances">Fragrances</option>
@@ -179,7 +184,10 @@ export function App() {
         </main>
       </div>
 
-      <Cart items={cart} />
+      <Cart 
+        items={cart} 
+        onCartQuant={handleAddCart}
+      />
     </>
   );
 }
